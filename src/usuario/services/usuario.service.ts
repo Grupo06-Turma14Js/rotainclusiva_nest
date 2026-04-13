@@ -5,12 +5,6 @@ import { Usuario } from '../entities/usuario.entity';
 
 @Injectable()
 export class UsuarioService {
-  delete(id: number): void {
-    throw new Error('Method not implemented.');
-  }
-  update(usuario: Usuario): Usuario {
-    throw new Error('Method not implemented.');
-  }
   constructor(
     @InjectRepository(Usuario)
     private usuarioRepository: Repository<Usuario>,
@@ -44,5 +38,15 @@ export class UsuarioService {
       throw new HttpException('O Usuário já existe!', HttpStatus.BAD_REQUEST);
 
     return await this.usuarioRepository.save(usuario);
+  }
+
+  async update(usuario: Usuario): Promise<Usuario> {
+    const buscaUsuario = await this.findById(usuario.id);
+    return await this.usuarioRepository.save({ ...buscaUsuario, ...usuario });
+  }
+
+  async delete(id: number): Promise<void> {
+    const buscaUsuario = await this.findById(id);
+    await this.usuarioRepository.delete(buscaUsuario.id);
   }
 }

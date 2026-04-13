@@ -41,14 +41,14 @@ export class UsuarioController {
   // Atualiza os dados de um usuário existente
   @Put('/atualizar')
   @HttpCode(HttpStatus.OK) // Status 200
-  update(@Body() usuario: Usuario): Usuario {
+  async update(@Body() usuario: Usuario): Promise<Usuario> {
     return this.usuarioService.update(usuario);
   }
 
   // Deleta um usuário pelo ID
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT) // Status 204 (Sem conteúdo no retorno)
-  delete(@Param('id', ParseIntPipe) id: number): void {
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.usuarioService.delete(id);
   }
 }

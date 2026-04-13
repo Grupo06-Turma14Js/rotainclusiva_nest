@@ -8,8 +8,6 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AcessibilidadeService } from './acessibilidade.service';
-import { CreateAcessibilidadeDto } from './dto/create-acessibilidade.dto';
-import { UpdateAcessibilidadeDto } from './dto/update-acessibilidade.dto';
 
 @Controller('acessibilidade')
 export class AcessibilidadeController {
