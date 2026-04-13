@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  ParseIntPipe,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put} from '@nestjs/common';
 import { UsuarioService } from '../services/usuario.service';
 import { Usuario } from '../entities/usuario.entity';
 
@@ -17,7 +6,6 @@ import { Usuario } from '../entities/usuario.entity';
 export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) {}
 
-  // Busca todos os usuários cadastrados
   @Get()
   @HttpCode(HttpStatus.OK) // Status 200
   async findAll(): Promise<Usuario[]> {

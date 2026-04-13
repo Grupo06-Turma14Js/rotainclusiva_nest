@@ -1,23 +1,20 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
-import { Usuario } from "../../usuario/entities/usuario.entity";
+import { IsNotEmpty } from "class-validator";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Carona } from "../../carona/entities/carona.entity";
 
-@Entity({ name: "tb_acessibilidade" })
+@Entity({name: "tb_acessibilidades"})
 export class Acessibilidade {
 
-  @PrimaryGeneratedColumn()
-  id!: number;
+    @PrimaryGeneratedColumn()
+    id!: number;
 
-  @Column({ length: 100, nullable: false })
-  tipo!: string;
+    @IsNotEmpty()
+    @Column({length: 255, nullable: false})
+    tipo!: string;
 
-  @Column({ default: false })
-  precisaApoio!: boolean;
+    
+    @OneToMany(() => Carona, (carona) => carona.acessibilidade)
+    carona!: Carona[] 
 
-  @Column({ nullable: true })
-  descricao?: string;
-
-  @ManyToOne(() => Usuario, usuario => usuario.acessibilidades, {
-    onDelete: 'CASCADE'
-  })
-  usuario!: Usuario;
+    
 }
