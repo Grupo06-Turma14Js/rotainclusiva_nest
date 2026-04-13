@@ -6,5 +6,5 @@ export class Acessibilidade {
   id!: number;
 
   @Column({ length: 255, nullable: false })
-  descricao!: string;
-}
+  tipo!: string;
+} // fazer relacao com a entidade carona 

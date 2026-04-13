@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAcessibilidadeDto } from './dto/create-acessibilidade.dto';
-import { UpdateAcessibilidadeDto } from './dto/update-acessibilidade.dto';
-import { Acessibilidade } from './entities/acessibilidade.entity';
+import { CreateAcessibilidadeDto } from '../dto/create-acessibilidade.dto';
+import { UpdateAcessibilidadeDto } from '../dto/update-acessibilidade.dto';
+import { Acessibilidade } from '../entities/acessibilidade.entity';
 
 @Injectable()
 export class AcessibilidadeService {
