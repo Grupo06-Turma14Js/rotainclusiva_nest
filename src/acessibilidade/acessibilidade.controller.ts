@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { AcessibilidadeService } from './acessibilidade.service';
 import { CreateAcessibilidadeDto } from './dto/create-acessibilidade.dto';
 import { UpdateAcessibilidadeDto } from './dto/update-acessibilidade.dto';
@@ -23,7 +31,10 @@ export class AcessibilidadeController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAcessibilidadeDto: UpdateAcessibilidadeDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateAcessibilidadeDto: UpdateAcessibilidadeDto,
+  ) {
     return this.acessibilidadeService.update(+id, updateAcessibilidadeDto);
   }
 
