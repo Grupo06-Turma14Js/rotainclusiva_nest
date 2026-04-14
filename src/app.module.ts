@@ -14,10 +14,10 @@ import { CaronaModule } from './carona/carona.module';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'root',
+      password: 'alunolab',
       database: 'db_rotainclusiva',
       entities: [Usuario, Carona, Acessibilidade],
-      synchronize: true
+      synchronize: true,
     }),
     UsuarioModule,
     AcessibilidadeModule,

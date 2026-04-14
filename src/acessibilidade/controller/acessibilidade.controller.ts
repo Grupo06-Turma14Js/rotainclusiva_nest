@@ -1,11 +1,21 @@
 import { AcessibilidadeService } from '../service/acessibilidade.service';
-import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post, Put, UseGuards } from "@nestjs/common";
-import { Acessibilidade } from "../entities/acessibilidade.entity";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+} from '@nestjs/common';
+import { Acessibilidade } from '../entities/acessibilidade.entity';
 
-
-@Controller("/acessibilidades")
+@Controller('/acessibilidades')
 export class AcessibilidadeController {
-  constructor(private readonly acessibilidadeService: AcessibilidadeService) { }
+  constructor(private readonly acessibilidadeService: AcessibilidadeService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -39,8 +49,7 @@ export class AcessibilidadeController {
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id', ParseIntPipe) id: number){
+  delete(@Param('id', ParseIntPipe) id: number) {
     return this.acessibilidadeService.delete(id);
   }
-
 }

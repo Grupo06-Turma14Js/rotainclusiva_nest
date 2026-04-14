@@ -1,11 +1,21 @@
-import { Controller, Get, Post, Put, Delete, HttpCode, HttpStatus, Param, Body, HttpException, UseGuards, ParseIntPipe } from "@nestjs/common";
-import { CaronaService } from "../service/carona.service";
-import { Carona } from "../entities/carona.entity";
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Body,
+  ParseIntPipe,
+} from '@nestjs/common';
+import { CaronaService } from '../service/carona.service';
+import { Carona } from '../entities/carona.entity';
 
-
-@Controller("/caronas")
+@Controller('/caronas')
 export class CaronaController {
-  constructor(private readonly caronaService: CaronaService) { }
+  constructor(private readonly caronaService: CaronaService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -39,8 +49,17 @@ export class CaronaController {
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id', ParseIntPipe) id: number){
+  delete(@Param('id', ParseIntPipe) id: number) {
     return this.caronaService.delete(id);
   }
 
+  @Get('/:id/calcular-tempo')
+  @HttpCode(HttpStatus.OK)
+  async calcularTempo(@Param('id', ParseIntPipe) id: number): Promise<any> {
+    const tempoCalculado = await this.caronaService.calcularTempoPorId(id);
+    return {
+      mensagem: 'Cálculo realizado com sucesso!',
+      tempoEstimado: tempoCalculado,
+    };
+  }
 }
