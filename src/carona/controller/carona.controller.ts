@@ -21,19 +21,19 @@ export class CaronaController {
 
   @Get('/origem/:origem')
   @HttpCode(HttpStatus.OK)
-  findAllByTitulo(@Param('origem') origem: string): Promise<Carona[]> {
+  findAllByOrigem(@Param('origem') origem: string): Promise<Carona[]> {
     return this.caronaService.findAllByOrigem(origem);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() carona: Carona): Promise<Carona> {
+  create(@Body() carona: Carona): Promise<any> {
     return this.caronaService.create(carona);
   }
 
   @Put()
   @HttpCode(HttpStatus.OK)
-  update(@Body() carona: Carona): Promise<Carona> {
+  update(@Body() carona: Carona): Promise<any> {
     return this.caronaService.update(carona);
   }
 

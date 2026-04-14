@@ -1,7 +1,6 @@
 import { AcessibilidadeService } from './../../acessibilidade/service/acessibilidade.service';
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { ILike, Repository} from "typeorm";
-import { DeleteResult } from "typeorm/browser";
+import { ILike, Repository, DeleteResult} from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Carona } from "../entities/carona.entity";
  
@@ -19,7 +18,8 @@ export class CaronaService {
     async findAll(): Promise<Carona[]>{ 
        return await this.caronaRepository.find({
             relations: {
-                acessibilidade:  true
+                acessibilidade:  true,
+                usuario: true
             }
        }); 
        
@@ -32,7 +32,8 @@ export class CaronaService {
             id
             }, 
             relations: {
-                acessibilidade:  true
+                acessibilidade:  true,
+                usuario: true
             }
         });
  
@@ -52,7 +53,23 @@ export class CaronaService {
         })
     }
  
-    async create(carona: Carona): Promise<Carona> {
+
+    private calcularTempoEstimado(distancia: number, velocidade: number): string {
+        if (velocidade <= 0) return "Velocidade inválida";
+
+        const tempoDecimal = distancia / velocidade;
+        const totalMinutos = Math.round(tempoDecimal * 60);
+
+        if (totalMinutos < 60) {
+            return `${totalMinutos} minutos`;
+        } else {
+            const horas = Math.floor(totalMinutos / 60);
+            const minutos = totalMinutos % 60;
+            return `${horas}h ${minutos}min`;
+        }
+    }
+
+    async create(carona: Carona): Promise<any> {
        
         if (carona.acessibilidade != null) {
            
@@ -60,15 +77,20 @@ export class CaronaService {
  
             if (!acessibilidade)
                 throw new HttpException('Acessibilidade não encontrada!', HttpStatus.NOT_FOUND);
- 
-              return await this.caronaRepository.save(carona);
+        
+            const caronaSalva = await this.caronaRepository.save(carona);
+            return {
+                ...caronaSalva,
+                tempoEstimado: this.calcularTempoEstimado(caronaSalva.distancia, caronaSalva.velocidade)
+            };
+        
         }else{
             throw new HttpException('Acessibilidade nao pode ser nulo!', HttpStatus.NOT_FOUND);
         }
    
     }
  
-    async update(carona: Carona): Promise<Carona> {
+    async update(carona: Carona): Promise<any> {
        
         let buscaCarona: Carona = await this.findById(carona.id);
  
@@ -82,12 +104,15 @@ export class CaronaService {
             if (!acessibilidade)
                 throw new HttpException('Tema não encontrado!', HttpStatus.NOT_FOUND);
                
-            return await this.caronaRepository.save(carona);
+            const caronaAtualizada = await this.caronaRepository.save(carona);
+            return {
+                ...caronaAtualizada,
+                tempoEstimado: this.calcularTempoEstimado(caronaAtualizada.distancia, caronaAtualizada.velocidade)
+            };
    
-        }else{
+        } else {
             throw new HttpException('Acessibilidade nao pode ser nulo!', HttpStatus.NOT_FOUND);
         }
-       
     }
  
     async delete(id: number): Promise<DeleteResult>{

@@ -5,6 +5,7 @@ import { Usuario } from './usuario/entities/usuario.entity';
 import { AcessibilidadeModule } from './acessibilidade/acessibilidade.module';
 import { Carona } from './carona/entities/carona.entity';
 import { Acessibilidade } from './acessibilidade/entities/acessibilidade.entity';
+import { CaronaModule } from './carona/carona.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { Acessibilidade } from './acessibilidade/entities/acessibilidade.entity'
     }),
     UsuarioModule,
     AcessibilidadeModule,
+    CaronaModule,
   ],
   controllers: [],
   providers: [],
