@@ -44,87 +44,72 @@ export class CaronaService {
       },
       relations: {
         acessibilidade: true,
+        usuario: true,
       },
     });
   }
 
   private calcularTempoEstimado(distancia: number, velocidade: number): string {
-    if (velocidade <= 0) return 'Velocidade inválida';
+    const dist = Number(distancia);
+    const vel = Number(velocidade);
 
-    const tempoDecimal = distancia / velocidade;
-    const totalMinutos = Math.round(tempoDecimal * 60);
+    if (vel <= 0) return 'Velocidade inválida';
 
-    if (totalMinutos < 60) {
-      return `${totalMinutos} minutos`;
-    } else {
-      const horas = Math.floor(totalMinutos / 60);
-      const minutos = totalMinutos % 60;
-      return `${horas}h ${minutos}min`;
-    }
+    const totalMinutos = Math.round((dist / vel) * 60);
+
+    if (totalMinutos < 60) return `${totalMinutos} minutos`;
+
+    const horas = Math.floor(totalMinutos / 60);
+    const minutos = totalMinutos % 60;
+    return minutos > 0 ? `${horas}h ${minutos}min` : `${horas}h`;
   }
 
-  // Adicione este método público no seu Service
   async calcularTempoPorId(id: number): Promise<string> {
     const carona = await this.findById(id);
     return this.calcularTempoEstimado(carona.distancia, carona.velocidade);
   }
 
   async create(carona: Carona): Promise<any> {
-    if (carona.acessibilidade != null) {
-      const acessibilidade = await this.acessibilidadeService.findById(
-        carona.acessibilidade.id,
-      );
-
-      if (!acessibilidade)
-        throw new HttpException(
-          'Acessibilidade não encontrada!',
-          HttpStatus.NOT_FOUND,
-        );
-
-      const caronaSalva = await this.caronaRepository.save(carona);
-      return {
-        ...caronaSalva,
-        tempoEstimado: this.calcularTempoEstimado(
-          caronaSalva.distancia,
-          caronaSalva.velocidade,
-        ),
-      };
-    } else {
+    if (!carona.acessibilidade?.id)
       throw new HttpException(
-        'Acessibilidade nao pode ser nulo!',
-        HttpStatus.NOT_FOUND,
+        'Acessibilidade não pode ser nula!',
+        HttpStatus.BAD_REQUEST,
       );
-    }
+
+    await this.acessibilidadeService.findById(carona.acessibilidade.id);
+
+    const caronaSalva = await this.caronaRepository.save(carona);
+    return {
+      ...caronaSalva,
+      tempoEstimado: this.calcularTempoEstimado(
+        caronaSalva.distancia,
+        caronaSalva.velocidade,
+      ),
+    };
   }
 
   async update(carona: Carona): Promise<any> {
-    const buscaCarona: Carona = await this.findById(carona.id);
-
-    if (!buscaCarona || !carona.id)
+    if (!carona.id)
       throw new HttpException('Carona não encontrada!', HttpStatus.NOT_FOUND);
 
-    if (carona.acessibilidade) {
-      const acessibilidade = await this.acessibilidadeService.findById(
-        carona.acessibilidade.id,
-      );
+    await this.findById(carona.id);
 
-      if (!acessibilidade)
-        throw new HttpException('Tema não encontrado!', HttpStatus.NOT_FOUND);
-
-      const caronaAtualizada = await this.caronaRepository.save(carona);
-      return {
-        ...caronaAtualizada,
-        tempoEstimado: this.calcularTempoEstimado(
-          caronaAtualizada.distancia,
-          caronaAtualizada.velocidade,
-        ),
-      };
-    } else {
+    if (!carona.acessibilidade?.id)
       throw new HttpException(
-        'Acessibilidade nao pode ser nulo!',
-        HttpStatus.NOT_FOUND,
+        'Acessibilidade não pode ser nula!',
+        HttpStatus.BAD_REQUEST,
       );
-    }
+
+    await this.acessibilidadeService.findById(carona.acessibilidade.id);
+
+    const caronaAtualizada = await this.caronaRepository.save(carona);
+    return {
+      ...caronaAtualizada,
+      tempoEstimado: this.calcularTempoEstimado(
+        caronaAtualizada.distancia,
+        caronaAtualizada.velocidade,
+      ),
+    };
   }
 
   async delete(id: number): Promise<DeleteResult> {

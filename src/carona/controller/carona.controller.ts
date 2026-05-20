@@ -12,7 +12,8 @@ import {
 } from '@nestjs/common';
 import { CaronaService } from '../service/carona.service';
 import { Carona } from '../entities/carona.entity';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('caronas')
 @Controller('/caronas')
 export class CaronaController {
   constructor(private readonly caronaService: CaronaService) {}
@@ -23,18 +24,25 @@ export class CaronaController {
     return this.caronaService.findAll();
   }
 
-  @Get('/:id')
-  @HttpCode(HttpStatus.OK)
-  findById(@Param('id', ParseIntPipe) id: number): Promise<Carona> {
-    return this.caronaService.findById(id);
-  }
-
   @Get('/origem/:origem')
   @HttpCode(HttpStatus.OK)
   findAllByOrigem(@Param('origem') origem: string): Promise<Carona[]> {
     return this.caronaService.findAllByOrigem(origem);
   }
-
+  @Get('/:id/calcular-tempo')
+  @HttpCode(HttpStatus.OK)
+  async calcularTempo(@Param('id', ParseIntPipe) id: number): Promise<any> {
+    const tempoCalculado = await this.caronaService.calcularTempoPorId(id);
+    return {
+      mensagem: 'Cálculo realizado com sucesso!',
+      tempoEstimado: tempoCalculado,
+    };
+  }
+  @Get('/:id')
+  @HttpCode(HttpStatus.OK)
+  findById(@Param('id', ParseIntPipe) id: number): Promise<Carona> {
+    return this.caronaService.findById(id);
+  }
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() carona: Carona): Promise<any> {
@@ -53,13 +61,5 @@ export class CaronaController {
     return this.caronaService.delete(id);
   }
 
-  @Get('/:id/calcular-tempo')
-  @HttpCode(HttpStatus.OK)
-  async calcularTempo(@Param('id', ParseIntPipe) id: number): Promise<any> {
-    const tempoCalculado = await this.caronaService.calcularTempoPorId(id);
-    return {
-      mensagem: 'Cálculo realizado com sucesso!',
-      tempoEstimado: tempoCalculado,
-    };
-  }
+
 }

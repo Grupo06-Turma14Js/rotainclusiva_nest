@@ -53,6 +53,12 @@ export class AcessibilidadeService {
   }
 
   async update(acessibilidade: Acessibilidade): Promise<Acessibilidade> {
+    if (!acessibilidade.id)
+      throw new HttpException(
+        'Acessibilidade não encontrada!',
+        HttpStatus.NOT_FOUND,
+      );
+
     await this.findById(acessibilidade.id);
 
     return await this.acessibilidadeRepository.save(acessibilidade);

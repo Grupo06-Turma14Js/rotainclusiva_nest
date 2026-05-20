@@ -12,7 +12,9 @@ import {
   Put,
 } from '@nestjs/common';
 import { Acessibilidade } from '../entities/acessibilidade.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('acessibilidades')
 @Controller('/acessibilidades')
 export class AcessibilidadeController {
   constructor(private readonly acessibilidadeService: AcessibilidadeService) {}
@@ -22,17 +24,15 @@ export class AcessibilidadeController {
   findAll(): Promise<Acessibilidade[]> {
     return this.acessibilidadeService.findAll();
   }
-
-  @Get('/:id')
-  @HttpCode(HttpStatus.OK)
-  findById(@Param('id', ParseIntPipe) id: number): Promise<Acessibilidade> {
-    return this.acessibilidadeService.findById(id);
-  }
-
   @Get('/tipo/:tipo')
   @HttpCode(HttpStatus.OK)
   findAllBydescricao(@Param('tipo') tipo: string): Promise<Acessibilidade[]> {
     return this.acessibilidadeService.findAllByTipo(tipo);
+  }
+  @Get('/:id')
+  @HttpCode(HttpStatus.OK)
+  findById(@Param('id', ParseIntPipe) id: number): Promise<Acessibilidade> {
+    return this.acessibilidadeService.findById(id);
   }
 
   @Post()

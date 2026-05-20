@@ -6,24 +6,22 @@ import { AcessibilidadeModule } from './acessibilidade/acessibilidade.module';
 import { Carona } from './carona/entities/carona.entity';
 import { Acessibilidade } from './acessibilidade/entities/acessibilidade.entity';
 import { CaronaModule } from './carona/carona.module';
+import { AppController } from './app.controller';
+import { ConfigModule } from '@nestjs/config';
+import { ProdService } from './data/services/prod.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'alunolab',
-      database: 'db_rotainclusiva',
-      entities: [Usuario, Carona, Acessibilidade],
-      synchronize: true,
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRootAsync({
+      useClass: ProdService,
+      imports: [ConfigModule],
     }),
     UsuarioModule,
     AcessibilidadeModule,
     CaronaModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }
